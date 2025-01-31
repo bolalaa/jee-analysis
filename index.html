@@ -5,26 +5,108 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>JEE Marks Analysis</title>
     
-    <!-- Load React -->
-    <script crossorigin src="https://unpkg.com/react@17/umd/react.production.min.js"></script>
-    <script crossorigin src="https://unpkg.com/react-dom@17/umd/react-dom.production.min.js"></script>
+    <!-- First, load React and its dependencies -->
+    <script src="https://unpkg.com/react@17/umd/react.development.js"></script>
+    <script src="https://unpkg.com/react-dom@17/umd/react-dom.development.js"></script>
+    <script src="https://unpkg.com/prop-types@15.7.2/prop-types.js"></script>
     
-    <!-- Load Recharts -->
-    <script src="https://unpkg.com/recharts@2.1.9/umd/Recharts.min.js"></script>
+    <!-- Then load Recharts after React is available -->
+    <script src="https://unpkg.com/recharts@2.1.9/umd/Recharts.js"></script>
     
-    <!-- Load Babel -->
+    <!-- Load Babel for JSX transformation -->
     <script src="https://unpkg.com/babel-standalone@6/babel.min.js"></script>
     
     <!-- Load Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
     
-    <!-- Our stylesheet -->
-    <link rel="stylesheet" href="styles.css">
+    <!-- Our custom styles -->
+    <style>
+        .chart-container {
+            width: 100%;
+            height: 400px;
+        }
+        .tooltip {
+            background: white;
+            border: 1px solid #ccc;
+            padding: 10px;
+            border-radius: 4px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+    </style>
 </head>
 <body>
-    <div id="root"></div>
+    <!-- Add a loading message that will be replaced when React loads -->
+    <div id="root">Loading JEE Analysis Dashboard...</div>
     
     <!-- Load our React component -->
-    <script type="text/babel" src="app.js"></script>
+    <script type="text/babel">
+        // First, we'll check if everything loaded correctly
+        console.log('React version:', React.version);
+        console.log('Recharts available:', typeof Recharts !== 'undefined');
+
+        // Our component code starts here
+        const { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer, Area } = Recharts;
+
+        const analysisData = [
+            { year: 2015, marks: 178, trend: 178.1, seasonal: 0.1 },
+            { year: 2016, marks: 180, trend: 179.2, seasonal: 0.3 },
+            { year: 2017, marks: 182, trend: 180.8, seasonal: 0.2 },
+            { year: 2018, marks: 177, trend: 177.1, seasonal: 0.4 },
+            { year: 2019, marks: 175, trend: 175.6, seasonal: 0.3 },
+            { year: 2020, marks: 185, trend: 184.1, seasonal: 0.2 },
+            { year: 2021, marks: 180, trend: 179.9, seasonal: 0.2 },
+            { year: 2022, marks: 175, trend: 175.5, seasonal: 0.2 },
+            { year: 2023, marks: 180, trend: 179.4, seasonal: 0.2 },
+            { year: 2024, marks: 182.5, trend: 181.5, seasonal: 0.2 }
+        ];
+
+        function App() {
+            return (
+                <div className="min-h-screen p-6">
+                    <header className="max-w-7xl mx-auto mb-8">
+                        <h1 className="text-3xl font-bold text-gray-900">JEE Marks Analysis</h1>
+                        <p className="text-gray-600 mt-2">Analysis of JEE Mains Rank 19000 (2015-2024)</p>
+                    </header>
+
+                    <main className="max-w-7xl mx-auto">
+                        <div className="bg-white rounded-lg shadow-lg p-6">
+                            <div className="chart-container">
+                                <ResponsiveContainer>
+                                    <LineChart data={analysisData}>
+                                        <CartesianGrid strokeDasharray="3 3" />
+                                        <XAxis dataKey="year" />
+                                        <YAxis domain={[170, 190]} />
+                                        <Tooltip />
+                                        <Legend />
+                                        <Line 
+                                            type="monotone" 
+                                            dataKey="marks" 
+                                            stroke="#2563eb" 
+                                            strokeWidth={2}
+                                            dot={{ stroke: '#2563eb', strokeWidth: 2, r: 5, fill: '#fff' }}
+                                            name="Actual Marks"
+                                        />
+                                    </LineChart>
+                                </ResponsiveContainer>
+                            </div>
+                        </div>
+                    </main>
+                </div>
+            );
+        }
+
+        // Render with error handling
+        try {
+            ReactDOM.render(<App />, document.getElementById('root'));
+        } catch (error) {
+            console.error('Error rendering app:', error);
+            document.getElementById('root').innerHTML = `
+                <div style="padding: 20px; background: #fee; border: 1px solid #f00;">
+                    <h2>Error Loading Application</h2>
+                    <pre>${error.message}</pre>
+                </div>
+            `;
+        }
+    </script>
 </body>
 </html>
